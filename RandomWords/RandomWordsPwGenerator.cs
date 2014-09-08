@@ -17,19 +17,15 @@ namespace RandomWords
 	public class RandomWordsPwGenerator : CustomPwGenerator
 	{
 		string[] words;
-		int numberOfWordsInPassword;
-		string wordDelimiter;
-		bool capitalizeWords;
+
+		public RandomWordsOptions RandomWordsOptions { get; set; }
 
 		public RandomWordsPwGenerator()
 		{
-			//TODO: implement keepass options
+			//TODO: allow custom words, move to GetOptions
 			var assembly = Assembly.GetExecutingAssembly();
 			var reader = new StreamReader(assembly.GetManifestResourceStream("RandomWords.3eslmod.txt"));
 			words = reader.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-			numberOfWordsInPassword = 4;
-			wordDelimiter = "";
-			capitalizeWords = false;
 		}
 		
 		public override ProtectedString Generate(PwProfile prf, CryptoRandomStream crsRandomSource)
@@ -41,12 +37,18 @@ namespace RandomWords
 					uuid.UuidBytes, Base64FormattingOptions.None));
 			}
 
+			//get options if not already
+			if (RandomWordsOptions == null)
+			{
+				RandomWordsOptions = RandomWordsOptions.WithDefaultOptions();
+			}
+
 			//TODO: get a simple strength value based on how many words are in the dictionary
 			//double strength = Math.Log(words.Length, 2);
 
-			string[] selectedWords = new string[numberOfWordsInPassword];
+			string[] selectedWords = new string[RandomWordsOptions.NumberOfWordsInPassword];
 
-			for (int i = 0; i < numberOfWordsInPassword; i++)
+			for (int i = 0; i < RandomWordsOptions.NumberOfWordsInPassword; i++)
 			{
 
 				//TODO: optimize random word selection and prevent same word from being selected more than once
@@ -58,7 +60,7 @@ namespace RandomWords
 
 				int pick = (int)(randomNum % (ulong)words.Length);
 
-				if (capitalizeWords)
+				if (RandomWordsOptions.CapitalizationMode == CapitalizationMode.TitleCase)
 				{
 					var chars = words[pick].ToCharArray();
 					chars[0] = char.ToUpper(chars[0]);
@@ -70,7 +72,7 @@ namespace RandomWords
 				}
 			}
 
-			string output = string.Join(wordDelimiter, selectedWords);
+			string output = string.Join(RandomWordsOptions.WordDelimiter, selectedWords);
 
 			return new ProtectedString(false, output);
 		}
@@ -90,6 +92,23 @@ namespace RandomWords
 		{
 
 			get { return uuid; }
+		}
+
+		public override bool SupportsOptions
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override string GetOptions(string options)
+		{
+			RandomWordsOptions = RandomWordsOptions.FromOptionsString(options);
+			
+			//TODO: allow editing options
+
+			return RandomWordsOptions.ToOptionsString();
 		}
 	}
 }
