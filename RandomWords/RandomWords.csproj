@@ -36,15 +36,28 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CapitalizationMode.cs" />
+    <Compile Include="RandomWordsOptions.cs" />
+    <Compile Include="RandomWordsOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RandomWordsOptionsForm.Designer.cs">
+      <DependentUpon>RandomWordsOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RandomWordsPwGenerator.cs" />
     <Compile Include="RandomWordsExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="3eslmod.txt" />
+    <EmbeddedResource Include="RandomWordsOptionsForm.resx">
+      <DependentUpon>RandomWordsOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

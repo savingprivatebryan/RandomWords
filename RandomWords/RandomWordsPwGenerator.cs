@@ -37,7 +37,7 @@ namespace RandomWords
 					uuid.UuidBytes, Base64FormattingOptions.None));
 			}
 
-			//get options if not already
+			//get options if not already done
 			if (RandomWordsOptions == null)
 			{
 				RandomWordsOptions = RandomWordsOptions.WithDefaultOptions();
@@ -105,8 +105,11 @@ namespace RandomWords
 		public override string GetOptions(string options)
 		{
 			RandomWordsOptions = RandomWordsOptions.FromOptionsString(options);
-			
-			//TODO: allow editing options
+
+			using (var form = new RandomWordsOptionsForm())
+			{
+				RandomWordsOptions = form.DoOptions(RandomWordsOptions);
+			}
 
 			return RandomWordsOptions.ToOptionsString();
 		}
