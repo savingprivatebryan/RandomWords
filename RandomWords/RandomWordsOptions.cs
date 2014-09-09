@@ -4,18 +4,6 @@ using System.Text;
 
 namespace RandomWords
 {
-	public enum CapitalizationMode
-	{
-		/// <summary>
-		/// All words lower case
-		/// </summary>
-		LowerCase = 1,
-		/// <summary>
-		/// First letter of each word is capitalized
-		/// </summary>
-		TitleCase = 2
-	}
-	
 	public class RandomWordsOptions
 	{
 		public int NumberOfWordsInPassword { get; set; }
